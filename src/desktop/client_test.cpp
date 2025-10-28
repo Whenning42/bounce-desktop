@@ -12,8 +12,16 @@
 const int32_t kPortOffset = 5900;
 
 TEST(Client, get_frame_returns_a_frame) {
-  auto backend =
-      WestonBackend::start_server(kPortOffset, 300, 200, {"sleep", "1000"});
+  auto backend = WestonBackend::start_server(kPortOffset, 300, 200);
+  ASSERT_OK(backend);
+
+  EnvVars env = EnvVars::environ();
+  for (const auto& [k, v] : (*backend)->get_desktop_env()) {
+    env.set_var(k, v);
+  }
+  ASSERT_OK_AND_ASSIGN(Process subproc,
+                       launch_process({"sleep", "1000"}, &env));
+
   sleep(1);
   ASSERT_OK_AND_ASSIGN(auto client,
                        BounceDeskClient::connect((*backend)->port()));

@@ -13,11 +13,9 @@
 
 namespace nb = nanobind;
 
-std::unique_ptr<Desktop> Desktop::create(
-    int32_t width, int32_t height, const std::vector<std::string>& command) {
-  ASSIGN_OR_RAISE(auto backend,
-                  WestonBackend::start_server(
-                      /*port_offset=*/5900, width, height, command));
+std::unique_ptr<Desktop> Desktop::create(int32_t width, int32_t height) {
+  ASSIGN_OR_RAISE(auto backend, WestonBackend::start_server(
+                                    /*port_offset=*/5900, width, height));
   auto desktop = std::unique_ptr<Desktop>(new Desktop());
   desktop->backend_ = std::move(backend);
   RAISE_IF_ERROR(desktop->connect_impl(desktop->backend_->port()));
@@ -29,6 +27,7 @@ NB_MODULE(_core, m) {
 
   nb::class_<Desktop>(m, "Desktop")
       .def("create", &Desktop::create)
+      .def("get_desktop_env", &Desktop::get_desktop_env)
       .def("key_press", &Desktop::key_press)
       .def("key_release", &Desktop::key_release)
       .def("move_mouse", &Desktop::move_mouse)

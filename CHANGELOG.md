@@ -1,3 +1,8 @@
+0.2.0 - 2025-10-27
+
+Update the API so that callers, not bounce_desktop, are responsible for subprocess
+launch and cleanup.
+
 0.1.6 - 2025-10-07
 
 - Document multi-instance limitations and add asserts preventing

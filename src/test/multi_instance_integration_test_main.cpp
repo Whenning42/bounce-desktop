@@ -31,30 +31,44 @@ int main(int argc, char** argv) {
   // For now, we're only going to support single instance per processes, but
   // it's good to have these issues identified and documented here.
 
+  auto backend_0 = std::move(
+      WestonBackend::start_server(5900, kWidth, kHeight).value_or_die());
+
+  EnvVars env_0 = EnvVars::environ();
+  for (const auto& [k, v] : backend_0->get_desktop_env()) {
+    env_0.set_var(k, v);
+  }
+
   ProcessOutConf out_conf_0 = ProcessOutConf{
       .stdout = StreamOutConf::File("/tmp/inst_0_stdout.txt").value_or_die(),
       .stderr = StreamOutConf::File("/tmp/inst_0_stderr.txt").value_or_die(),
   };
-  ProcessOutConf out_conf_1 = ProcessOutConf{
-      .stdout = StreamOutConf::File("/tmp/inst_1_stdout.txt").value_or_die(),
-      .stderr = StreamOutConf::File("/tmp/inst_1_stderr.txt").value_or_die(),
-  };
-  auto backend_0 =
-      std::move(WestonBackend::start_server(
-                    5900, kWidth, kHeight,
-                    {"/home/william/Games/factorio/bin/x64/factorio"},
-                    std::move(out_conf_0))
-                    .value_or_die());
+  Process subproc_0 = std::move(
+      launch_process({"/home/william/Games/factorio/bin/x64/factorio"}, &env_0,
+                     std::move(out_conf_0))
+          .value_or_die());
+
   auto client_0_unique_ptr =
       std::move(BounceDeskClient::connect(backend_0->port()).value_or_die());
   std::shared_ptr<BounceDeskClient> client_0 = std::move(client_0_unique_ptr);
 
-  auto backend_1 =
-      std::move(WestonBackend::start_server(
-                    5900, kWidth, kHeight,
-                    {"/home/william/Games/factorio_copy/bin/x64/factorio"},
-                    std::move(out_conf_1))
-                    .value_or_die());
+  auto backend_1 = std::move(
+      WestonBackend::start_server(5900, kWidth, kHeight).value_or_die());
+
+  EnvVars env_1 = EnvVars::environ();
+  for (const auto& [k, v] : backend_1->get_desktop_env()) {
+    env_1.set_var(k, v);
+  }
+
+  ProcessOutConf out_conf_1 = ProcessOutConf{
+      .stdout = StreamOutConf::File("/tmp/inst_1_stdout.txt").value_or_die(),
+      .stderr = StreamOutConf::File("/tmp/inst_1_stderr.txt").value_or_die(),
+  };
+  Process subproc_1 = std::move(
+      launch_process({"/home/william/Games/factorio_copy/bin/x64/factorio"},
+                     &env_1, std::move(out_conf_1))
+          .value_or_die());
+
   auto client_1_unique_ptr =
       std::move(BounceDeskClient::connect(backend_1->port()).value_or_die());
   std::shared_ptr<BounceDeskClient> client_1 = std::move(client_1_unique_ptr);

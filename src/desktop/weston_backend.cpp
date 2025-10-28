@@ -11,8 +11,7 @@
 #include "paths.h"
 
 StatusOr<std::unique_ptr<WestonBackend>> WestonBackend::start_server(
-    int32_t port_offset, int32_t width, int32_t height,
-    const std::vector<std::string>& command, ProcessOutConf&& command_out) {
+    int32_t port_offset, int32_t width, int32_t height) {
   Process weston;
   std::string instance_name;
   int port = port_offset;
@@ -34,17 +33,15 @@ StatusOr<std::unique_ptr<WestonBackend>> WestonBackend::start_server(
   bool r = read_vars(instance_name, &dpy_vars);
   if (!r) return UnknownError("Failed to read display vars.");
 
-  EnvVars env_vars = EnvVars::environ();
-  env_vars.set_var("DISPLAY", dpy_vars.x_display.c_str());
-  env_vars.set_var("WAYLAND_DISPLAY", dpy_vars.wayland_display.c_str());
+  std::unordered_map<std::string, std::string> desktop_env;
+  desktop_env["DISPLAY"] = dpy_vars.x_display;
+  desktop_env["WAYLAND_DISPLAY"] = dpy_vars.wayland_display;
+
   printf(
       "===================== Running on DISPLAY: %s, WAYLAND_DISPLAY: %s "
       "==============\n",
       dpy_vars.x_display.c_str(), dpy_vars.wayland_display.c_str());
 
-  ASSIGN_OR_RETURN(Process subproc,
-                   launch_process(command, &env_vars, std::move(command_out)));
-
   return std::unique_ptr<WestonBackend>(
-      new WestonBackend(port, std::move(weston), std::move(subproc)));
+      new WestonBackend(port, std::move(weston), std::move(desktop_env)));
 }

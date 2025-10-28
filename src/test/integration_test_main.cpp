@@ -14,18 +14,25 @@ const int kHeight = 600;
 int main(int argc, char** argv) {
   (void)argc, (void)argv;
 
+  auto backend = std::move(
+      WestonBackend::start_server(5900, kWidth, kHeight).value_or_die());
+
+  EnvVars env = EnvVars::environ();
+  for (const auto& [k, v] : backend->get_desktop_env()) {
+    env.set_var(k, v);
+  }
+
   ProcessOutConf out_conf = ProcessOutConf{
       .stdout = StreamOutConf::File("/tmp/bounce_integration_stdout.txt")
                     .value_or_die(),
       .stderr = StreamOutConf::File("/tmp/bounce_integration_stderr.txt")
                     .value_or_die(),
   };
-  auto backend =
-      std::move(WestonBackend::start_server(
-                    5900, kWidth, kHeight,
-                    {"/home/william/Games/factorio/bin/x64/factorio"},
-                    std::move(out_conf))
-                    .value_or_die());
+  Process subproc = std::move(
+      launch_process({"/home/william/Games/factorio/bin/x64/factorio"}, &env,
+                     std::move(out_conf))
+          .value_or_die());
+
   auto client_unique =
       std::move(BounceDeskClient::connect(backend->port()).value_or_die());
   std::shared_ptr<BounceDeskClient> client = std::move(client_unique);
