@@ -1,3 +1,9 @@
+0.2.1 - 2025-10-27
+
+FIXED:
+- Fixed runtime error in Desktop.get_desktop_env() from missing nanobind type
+  cast include.
+
 0.2.0 - 2025-10-27
 
 Update the API so that callers, not bounce_desktop, are responsible for subprocess

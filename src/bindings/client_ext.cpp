@@ -6,6 +6,7 @@
 #include <nanobind/ndarray.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/unique_ptr.h>
+#include <nanobind/stl/unordered_map.h>
 #include <nanobind/stl/vector.h>
 
 #include "desktop/frame.h"

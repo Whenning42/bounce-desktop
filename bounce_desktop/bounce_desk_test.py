@@ -8,6 +8,7 @@ class TestDesktop(unittest.TestCase):
         d = Desktop.create(300, 200)
         frame = d.get_frame()
         self.assertEqual(frame.shape, (300, 200, 4))
+        self.assertTrue("DISPLAY" in d.get_desktop_env())
 
 
 if __name__ == "__main__":
