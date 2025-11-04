@@ -4,9 +4,8 @@
 #   make build: Builds the whole project and installs it under build/
 #   make build_weston: Builds vendored weston and installs it under build/
 #   make test: Runs the project's unit tests
-#   make package: Builds the project's python package and stores it under dist/
-#   make package_test: Runs the project's unit tests and builds and verifies the
-#                      python package.
+#   make package: Builds the project's python package, runs its tests, and stores the
+#                 built package under dist/ if all tests pass.
 #   make upload: Run the project's unit and packaging tests and then uploads
 #                the package to pypi.
 #
@@ -23,13 +22,17 @@ build: build_weston
 	meson install -C build/
 
 WESTON_BUILD_DIR := ${CURDIR}/build/weston-fork
-WESTON := ${CURDIR}/build/bounce_desktop/_vendored/weston
+# We install to a temporary prefix and then copy over to our final
+# desired prefix to materialize symlinks that are unsupported by python
+# packaging.
+TMP_WESTON_PREFIX := ${CURDIR}/build/bounce_desktop/_vendored/tmp_weston
+WESTON_PREFIX := ${CURDIR}/build/bounce_desktop/_vendored/weston
 build_weston:
-	mkdir -p ${WESTON}
+	mkdir -p ${TMP_WESTON_PREFIX}
 
 	cd subprojects/weston-fork; \
 	meson setup ${WESTON_BUILD_DIR} --reconfigure --buildtype=release \
-		--prefix=${WESTON} \
+		--prefix=${TMP_WESTON_PREFIX} \
 		-Dwerror=false \
 		-Dbackend-vnc=true \
 		-Drenderer-gl=true \
@@ -46,15 +49,18 @@ build_weston:
 	meson compile -C ${WESTON_BUILD_DIR}
 	meson install -C ${WESTON_BUILD_DIR}
 
-package: build
-	./packaging/build_package.sh
+	mkdir -p ${WESTON_PREFIX}
+	cp -rL ${TMP_WESTON_PREFIX}/. ${WESTON_PREFIX}/
+	rm -rf ${TMP_WESTON_PREFIX}
 
 test: build
 	meson test -C build/ --print-errorlogs --max-lines 2000
 
-package_test: test
+package: build test
+	mkdir -p dist/ && mkdir -p packaging/dist
+	poetry build --output packaging/dist
 	./packaging/test_package.sh
+	rm -rf dist/* && cp packaging/dist/* dist/
 
-upload: test
-	./packaging/test_package.sh --save_package
+upload: package
 	twine upload dist/*

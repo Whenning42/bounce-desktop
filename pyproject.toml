@@ -15,27 +15,12 @@ requires = ["poetry-core>=1.0.0", "meson>=1.0.0", "ninja"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-packages = [{include = "bounce_desktop"}]
-include = [
-    "meson.build",
-    "makefile",
-    "src/**/*.cpp",
-    "src/**/*.h",
-    "src/**/*.tpp",
-    "src/**/*.py",
-    "third_party/**/*.h",
-    "third_party/**/*.cpp",
-    "subprojects/**/*",
+packages = [
+    { include = "bounce_desktop", from="build" }
 ]
-
-
-# Note: We don't ship wheels, since building our vendored patched Weston
-# would be too challenging, due to its many dependencies. If we upstream
-# our patches, then we'd have the option of building and shipping wheels.
-
-[tool.poetry.build]
-script = "build-extension.py"
-generate-setup-file = false
+include = [
+    { path = "build/bounce_desktop/*", format="wheel" },
+]
 
 [tool.poetry.dependencies]
 numpy = "^2.2.0"
