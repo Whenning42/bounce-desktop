@@ -16,7 +16,7 @@
 
 class SDLViewer {
  public:
-  MOVEABLE_NOT_COPYABLE_CUSTOM(SDLViewer);
+  MOVEABLE_NOT_COPYABLE_CUSTOM(SDLViewer)
 
   // Create a viewer by calling open().
   static StatusOr<std::unique_ptr<SDLViewer>> open(

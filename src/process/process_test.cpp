@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <fstream>
+#include <thread>
 
 #include "third_party/status/status_gtest.h"
 
