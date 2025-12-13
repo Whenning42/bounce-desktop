@@ -48,9 +48,8 @@ int main(int argc, char** argv) {
                      std::move(out_conf_0))
           .value_or_die());
 
-  auto client_0_unique_ptr =
+  auto client_0 =
       std::move(BounceDeskClient::connect(backend_0->port()).value_or_die());
-  std::shared_ptr<BounceDeskClient> client_0 = std::move(client_0_unique_ptr);
 
   auto backend_1 = std::move(
       WestonBackend::start_server(5900, kWidth, kHeight).value_or_die());
@@ -69,16 +68,15 @@ int main(int argc, char** argv) {
                      &env_1, std::move(out_conf_1))
           .value_or_die());
 
-  auto client_1_unique_ptr =
+  auto client_1 =
       std::move(BounceDeskClient::connect(backend_1->port()).value_or_die());
-  std::shared_ptr<BounceDeskClient> client_1 = std::move(client_1_unique_ptr);
 
   auto viewer_0 =
-      std::move(SDLViewer::open(client_0, "Viewer 0", /*allow_unsafe=*/true)
+      std::move(SDLViewer::open(client_0.get(), "Viewer 0", /*allow_unsafe=*/true)
                     .value_or_die());
   sleep_for(200ms);
   auto viewer_1 =
-      std::move(SDLViewer::open(client_1, "Viewer 1", /*allow_unsafe=*/true)
+      std::move(SDLViewer::open(client_1.get(), "Viewer 1", /*allow_unsafe=*/true)
                     .value_or_die());
 
   int x = 0;

@@ -1,3 +1,7 @@
+0.2.2 - 2025-12-13
+
+- Add an optional 'visible' argument to `Desktop.create()`.
+
 0.2.1 - 2025-10-27
 
 FIXED:

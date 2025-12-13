@@ -33,10 +33,9 @@ int main(int argc, char** argv) {
                      std::move(out_conf))
           .value_or_die());
 
-  auto client_unique =
+  auto client =
       std::move(BounceDeskClient::connect(backend->port()).value_or_die());
-  std::shared_ptr<BounceDeskClient> client = std::move(client_unique);
-  auto viewer = std::move(SDLViewer::open(client).value_or_die());
+  auto viewer = std::move(SDLViewer::open(client.get()).value_or_die());
 
   int x = 0;
   int y = 0;

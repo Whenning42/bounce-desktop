@@ -17,7 +17,7 @@ std::atomic<int> num_open = 0;
 }  // namespace
 
 StatusOr<std::unique_ptr<SDLViewer>> SDLViewer::open(
-    std::shared_ptr<BounceDeskClient> client, std::string window_name,
+    BounceDeskClient* client, std::string window_name,
     bool allow_unsafe) {
   int last_open = num_open.fetch_add(1);
   if (last_open > 0 && !allow_unsafe) {
@@ -37,7 +37,7 @@ StatusOr<std::unique_ptr<SDLViewer>> SDLViewer::open(
 SDLViewer::SDLViewer(SDLViewer&& other) {
   exit_loop_ = other.exit_loop_.load();
   was_closed_ = other.was_closed_.load();
-  client_ = std::move(other.client_);
+  client_ = other.client_;
   app_loop_ = std::move(other.app_loop_);
 }
 
