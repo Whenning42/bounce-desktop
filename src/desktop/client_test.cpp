@@ -4,12 +4,14 @@
 #include <gtest/gtest.h>
 #include <unistd.h>
 
-#include "vnc_test/mock_vnc_server.h"
 #include "desktop/mouse_button.h"
-#include "third_party/status/status_gtest.h"
 #include "desktop/weston_backend.h"
+#include "third_party/status/status_gtest.h"
+#include "vnc_test/mock_vnc_server.h"
 
 const int32_t kPortOffset = 5900;
+
+TEST(Client, make_button_mask) { EXPECT_EQ(make_button_mask({1, 3}), 5); }
 
 TEST(Client, get_frame_returns_a_frame) {
   auto backend = WestonBackend::start_server(kPortOffset, 300, 200);

@@ -5,9 +5,9 @@
 
 inline int set_button_mask(int button_mask, int button, bool pressed) {
   if (pressed) {
-    return button_mask | (1 << button);
+    return button_mask | (1 << (button - 1));
   } else {
-    return button_mask & ~(1 << button);
+    return button_mask & ~(1 << (button - 1));
   }
 }
 
