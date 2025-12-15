@@ -24,3 +24,4 @@ include = [
 
 [tool.poetry.dependencies]
 numpy = "^2.2.0"
+meson = "^1.10.0"
