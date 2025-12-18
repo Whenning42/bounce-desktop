@@ -25,3 +25,8 @@ include = [
 [tool.poetry.dependencies]
 numpy = "^2.2.0"
 meson = "^1.10.0"
+
+[tool.poetry.build]
+# We give Poetry a no-op build script here to tell it that we're building a platform
+# specific wheel and that it should tag built wheels with the correct platform tags.
+script = "packaging/placeholder.py"
