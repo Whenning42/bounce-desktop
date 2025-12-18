@@ -5,7 +5,8 @@ python3 = import('python').find_installation('python3', required: false)
 nanobind_dep = dependency('nanobind')
 
 py_sources = [
-  '../src/bindings/client_ext.cpp',
+  '../src/bindings/desktop_ext.cpp',
+  '../src/desktop/desktop.cpp',
   '../third_party/status/exceptions.h',
 ]
 

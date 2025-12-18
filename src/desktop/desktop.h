@@ -1,5 +1,5 @@
-#ifndef BINDINGS_CLIENT_EXT_H_
-#define BINDINGS_CLIENT_EXT_H_
+#ifndef DESKTOP_DESKTOP_H_
+#define DESKTOP_DESKTOP_H_
 
 #include <memory>
 #include <string>
@@ -33,4 +33,4 @@ class Desktop : public BounceDeskClient {
   std::unique_ptr<SDLViewer> sdl_viewer_;
 };
 
-#endif  // BINDINGS_CLIENT_EXT_H_
+#endif  // DESKTOP_DESKTOP_H

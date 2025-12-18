@@ -3,7 +3,7 @@
 
 #include "status_or.h"
 
-void raise_status(const StatusVal& status) {
+inline void raise_status(const StatusVal& status) {
   if (!status.ok()) {
     if (status.code() == StatusCode::INVALID_ARGUMENT) {
       throw std::invalid_argument(status.to_string());

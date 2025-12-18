@@ -110,6 +110,13 @@ export_display = executable('export_display',
   install: true
 )
 
+desktop_test = executable('desktop_test',
+  ['src/desktop/desktop_test.cpp', 'src/desktop/desktop.cpp'],
+  include_directories: include_directories('src'),
+  cpp_args: ['-fexceptions'],
+  link_with: bouncedesk_lib,
+  dependencies: test_deps)
+
 integration_test = executable('integration_test', ['src/test/integration_test_main.cpp'], include_directories: include_directories('src'), link_with: bouncedesk_lib, dependencies: [gvnc_dep])
 multi_instance_integration_test = executable('multi_instance_integration_test', ['src/test/multi_instance_integration_test_main.cpp'], include_directories: include_directories('src'), link_with: bouncedesk_lib, dependencies: [gvnc_dep])
 
