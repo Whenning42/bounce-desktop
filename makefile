@@ -19,6 +19,7 @@
 BUILD_DIR := ${CURDIR}/build
 build: build_weston
 	meson setup build/ --prefix=${BUILD_DIR}
+	meson compile -v -C build/
 	meson install -C build/
 
 WESTON_BUILD_DIR := ${CURDIR}/build/weston-fork
