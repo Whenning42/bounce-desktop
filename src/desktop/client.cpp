@@ -17,30 +17,38 @@ const uint32_t kUnusedScancode = 0;
 std::atomic<int> num_open = 0;
 
 namespace {
-VncPixelFormat* local_format() {
-  static bool init = false;
+// Use BGRA as the server format as it's the best supported format.
+// Note: Weston's VNC backend seems to refuse/ignore requests to use
+// RGBA as the protocol format.
+VncPixelFormat* server_format() {
   static VncPixelFormat* fmt = vnc_pixel_format_new();
-  if (!init) {
-    init = true;
-    fmt->depth = 24;
-    fmt->bits_per_pixel = 32;
-    fmt->red_max = 255;
-    fmt->blue_max = 255;
-    fmt->green_max = 255;
-    // TODO: Figure out exactly how pixel formats work?
-    // Buffer seems to come back BGRA regardless of what we
-    // set for these shifts?
-    fmt->red_shift = 16;
-    fmt->green_shift = 8;
-    fmt->blue_shift = 0;
-    fmt->true_color_flag = 1;
-  }
+  fmt->depth = 24;
+  fmt->bits_per_pixel = 32;
+  fmt->red_max = 255;
+  fmt->green_max = 255;
+  fmt->blue_max = 255;
+  fmt->red_shift = 16;
+  fmt->green_shift = 8;
+  fmt->blue_shift = 0;
+  fmt->byte_order = G_BYTE_ORDER;
+  fmt->true_color_flag = 1;
   return fmt;
 }
 
-const VncPixelFormat* remote_format(VncConnection* c) {
-  const VncPixelFormat* r = vnc_connection_get_pixel_format(c);
-  return r ? r : local_format();
+// Use RGBA as the local format.
+VncPixelFormat* local_format() {
+  static VncPixelFormat* fmt = vnc_pixel_format_new();
+  fmt->depth = 24;
+  fmt->bits_per_pixel = 32;
+  fmt->red_max = 255;
+  fmt->green_max = 255;
+  fmt->blue_max = 255;
+  fmt->red_shift = 0;
+  fmt->green_shift = 8;
+  fmt->blue_shift = 16;
+  fmt->byte_order = G_BYTE_ORDER;
+  fmt->true_color_flag = 1;
+  return fmt;
 }
 
 void on_connected(VncConnection* c, void* data) { (void)c, (void)data; }
@@ -161,7 +169,7 @@ void BounceDeskClient::resize(int width, int height) {
 
   buffer = (uint8_t*)malloc(width * height * 4);
   fb_ = VNC_FRAMEBUFFER(vnc_base_framebuffer_new(
-      buffer, width, height, 4 * width, local_format(), remote_format(c_)));
+      buffer, width, height, 4 * width, local_format(), server_format()));
   CHECK(vnc_connection_set_framebuffer(c_, fb_));
   CHECK(vnc_connection_framebuffer_update_request(c_, false, 0, 0, width,
                                                   height));
@@ -189,6 +197,7 @@ Frame BounceDeskClient::get_frame() {
         .width = width_, .height = height_, .pixels = UniquePtrBuf(pixels)};
   }
   Frame f = future.get();
+
   delete request;
   return f;
 }
@@ -204,12 +213,9 @@ static Frame move_frame(VncConnection* c, VncFramebuffer** fb_ptr) {
   int height = vnc_framebuffer_get_height(fb);
   uint8_t* old_buffer = vnc_framebuffer_get_buffer(fb);
   uint8_t* new_buffer = (uint8_t*)malloc(4 * width * height);
-  const VncPixelFormat* local_format = vnc_framebuffer_get_local_format(fb);
-  const VncPixelFormat* remote_format = vnc_framebuffer_get_remote_format(fb);
-
   Frame f{.width = width, .height = height, .pixels = UniquePtrBuf(old_buffer)};
   *fb_ptr = VNC_FRAMEBUFFER(vnc_base_framebuffer_new(
-      new_buffer, width, height, 4 * width, local_format, remote_format));
+      new_buffer, width, height, 4 * width, local_format(), server_format()));
   vnc_connection_set_framebuffer(c, *fb_ptr);
   g_object_unref(fb);
   return f;
@@ -233,7 +239,7 @@ void BounceDeskClient::vnc_loop() {
                VNC_CONNECTION_ENCODING_EXTENDED_DESKTOP_RESIZE,
                VNC_CONNECTION_ENCODING_DESKTOP_RESIZE};
   CHECK(vnc_connection_set_encodings(c_, sizeof(enc) / sizeof(enc[0]), enc));
-  CHECK(vnc_connection_set_pixel_format(c_, local_format()));
+  CHECK(vnc_connection_set_pixel_format(c_, server_format()));
   CHECK(vnc_connection_set_auth_type(c_, VNC_CONNECTION_AUTH_NONE));
 
   g_signal_connect(c_, "vnc-connected", G_CALLBACK(on_connected), NULL);

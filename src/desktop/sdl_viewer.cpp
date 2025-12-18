@@ -16,9 +16,9 @@ std::mutex sdl_init_mu;
 std::atomic<int> num_open = 0;
 }  // namespace
 
-StatusOr<std::unique_ptr<SDLViewer>> SDLViewer::open(
-    BounceDeskClient* client, std::string window_name,
-    bool allow_unsafe) {
+StatusOr<std::unique_ptr<SDLViewer>> SDLViewer::open(BounceDeskClient* client,
+                                                     std::string window_name,
+                                                     bool allow_unsafe) {
   int last_open = num_open.fetch_add(1);
   if (last_open > 0 && !allow_unsafe) {
     return InternalError(
@@ -82,7 +82,10 @@ void SDLViewer::app_loop() {
   renderer = SDL_CreateRenderer(
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   check_ptr(renderer, "SDL_CreateRenderer");
-  texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA8888,
+  // Note: SDL uses value order, not byte order for pixel formats, so their
+  // ABGR8888 is r, g, b, a in memory.
+  const int pixel_format = SDL_PIXELFORMAT_ABGR8888;
+  texture = SDL_CreateTexture(renderer, pixel_format,
                               SDL_TEXTUREACCESS_STREAMING, w, h);
   check_ptr(texture, "SDL_CreateTexture");
 
@@ -103,7 +106,7 @@ void SDLViewer::app_loop() {
       h = f.height;
       SDL_SetWindowSize(window, w, h);
       if (texture) SDL_DestroyTexture(texture);
-      texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA8888,
+      texture = SDL_CreateTexture(renderer, pixel_format,
                                   SDL_TEXTUREACCESS_STREAMING, w, h);
       check_ptr(texture, "SDL_CreateTexture (resize)");
     }

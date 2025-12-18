@@ -7,6 +7,8 @@
 #include <nanobind/stl/unordered_map.h>
 #include <nanobind/stl/vector.h>
 
+#include <bit>
+
 #include "desktop/desktop.h"
 #include "desktop/frame.h"
 #include "third_party/status/exceptions.h"
@@ -33,6 +35,6 @@ NB_MODULE(_core, m) {
 
         return nb::ndarray<uint8_t, nb::numpy, nb::shape<-1, -1, 4>,
                            nb::c_contig>(
-            data, {(uint32_t)f.width, (uint32_t)f.height, 4}, owner);
+            data, {(uint32_t)f.height, (uint32_t)f.width, 4}, owner);
       });
 }
