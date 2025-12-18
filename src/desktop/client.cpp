@@ -139,6 +139,9 @@ BounceDeskClient::~BounceDeskClient() {
 }
 
 void BounceDeskClient::resize(int width, int height) {
+  width_ = width;
+  height_ = height;
+
   int old_width = -1;
   int old_height = -1;
   uint8_t* buffer;
@@ -180,7 +183,10 @@ Frame BounceDeskClient::get_frame() {
   g_main_context_invoke(NULL, request_frame, c_);
   std::future<Frame> future = request->get_future();
   if (future.wait_for(3s) == std::future_status::timeout) {
-    FATAL("Failed to receive requested frame.");
+    LOG(kLogVnc, "BounceDesktop client failed to receive frame.");
+    uint8_t* pixels = (uint8_t*)calloc(height_ * width_ * 4, 1);
+    return Frame{
+        .width = width_, .height = height_, .pixels = UniquePtrBuf(pixels)};
   }
   Frame f = future.get();
   delete request;

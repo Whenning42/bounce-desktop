@@ -71,6 +71,13 @@ class BounceDeskClient {
   std::mutex pending_requests_mu_;
   std::vector<std::promise<Frame>*> pending_requests_;
 
+  // Gvnc's connection holds the authoritative framebuffer width and height, but
+  // we track what we think the latest dimensions are ourselves as well, so that
+  // we can try to send correctly sized blank get_frame() when our connection to
+  // the server times out.
+  std::atomic<int> width_ = 1;
+  std::atomic<int> height_ = 1;
+
   int mouse_x_ = 10;
   int mouse_y_ = 10;
   int button_mask_ = 0;
