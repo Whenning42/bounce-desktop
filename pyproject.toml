@@ -1,11 +1,11 @@
 [project]
 name = "bounce_desktop"
-version = "0.2.2" # if changed, update meson.build too.
+version = "0.3.0" # if changed, update meson.build too.
 description = "Hardware-accelerated Linux virtual desktops."
 authors = [{name="William Henning", email="wchenningwchenning@gmail.com"}]
 license = "MIT"
 readme = "readme.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10" # if changed, update docker/build_entrypoint.sh python versions.
 
 [project.urls]
 Homepage = "https://github.com/Whenning42/bounce-desktop"

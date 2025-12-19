@@ -1,3 +1,9 @@
+0.3.0 - 2025-12-13
+
+- Fixed incorrect image dimensions and color channels returned from `Desktop.get_frame()`
+- Improved bounce_desktop wheel portability and python version coverage
+- Fixed bounce_desktop wheels incorrectly being tagged as pure-python wheels
+
 0.2.2 - 2025-12-13
 
 - Add an optional 'visible' argument to `Desktop.create()`.

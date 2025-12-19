@@ -7,7 +7,7 @@ BUILD_DIR=packaging/dist
 DIST_OUT=/dist_out
 VENV=build_venv
 
-for py in python3.10 python3.11 python3.12 python3.13 python3.14; do
+for py in python3.10 python3.11 python3.12 python3.13 python3.14; do # If changed, update pyproject.toml python versions.
     # Activate python environment
     rm -rf -- ${VENV} && $py -m venv ${VENV}
     source ${VENV}/bin/activate
