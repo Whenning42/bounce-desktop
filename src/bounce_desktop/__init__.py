@@ -6,6 +6,6 @@ __version__ = "0.0.2"
 
 _package_dir = Path(__file__).parent
 
-from ._core import Desktop
+from bounce_desktop._core import Desktop
 
 __all__ = ["Desktop"]

@@ -128,4 +128,4 @@ test('process_test', process_test, workdir: meson.project_source_root())
 test('launch_weston_test', launch_weston_test, workdir: meson.project_source_root())
 
 # Python extension module
-subdir('bounce_desktop')
+subdir('src/bounce_desktop')
