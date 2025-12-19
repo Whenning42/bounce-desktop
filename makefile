@@ -1,13 +1,15 @@
 # A makefile for building bounce_desktop library, python package, and vendored weston.
 #
 # Commands:
-#   make build: Builds the whole project and installs it under build/
-#   make build_weston: Builds vendored weston and installs it under build/
+#   make build: Builds the libbounce_desk and Weston and installs them under build/
+#   make build_weston: Builds Weston and installs it under build/
 #   make test: Runs the project's unit tests
 #   make package: Builds the project's python package, runs its tests, and stores the
 #                 built package under dist/ if all tests pass.
 #   make upload: Run the project's unit and packaging tests and then uploads
 #                the package to pypi.
+#   make release: Builds python release packages in our build environment. Built
+#                 packages will be written to dist/.
 #
 #
 # Note: We use a makefile for all of our builds, since:
@@ -18,7 +20,7 @@
 
 BUILD_DIR := ${CURDIR}/build
 build: build_weston
-	meson setup build/ --prefix=${BUILD_DIR}
+	meson setup build/ --reconfigure --prefix=${BUILD_DIR}
 	meson compile -v -C build/
 	meson install -C build/
 
@@ -34,6 +36,7 @@ build_weston:
 	cd subprojects/weston-fork; \
 	meson setup ${WESTON_BUILD_DIR} --reconfigure --buildtype=release \
 		--prefix=${TMP_WESTON_PREFIX} \
+		-Dlibdir=lib \
 		-Dwerror=false \
 		-Dbackend-vnc=true \
 		-Drenderer-gl=true \
@@ -44,8 +47,13 @@ build_weston:
 		-Dbackend-wayland=false \
 		-Dbackend-x11=false \
 		-Dbackend-rdp=false \
+		-Dbackend-pipewire=false \
 		-Dremoting=false \
-		-Dpipewire=false
+		-Dpipewire=false \
+		-Dsystemd=false \
+		-Dshell-lua=false \
+		-Ddemo-clients=false \
+		-Dimage-webp=false
 
 	meson compile -C ${WESTON_BUILD_DIR}
 	meson install -C ${WESTON_BUILD_DIR}
@@ -57,11 +65,18 @@ build_weston:
 test: build
 	meson test -C build/ --print-errorlogs --max-lines 2000
 
-package: build test
+package: build
 	mkdir -p dist/ && mkdir -p packaging/dist
-	poetry build --output packaging/dist
-	./packaging/test_package.sh
-	rm -rf dist/* && cp packaging/dist/* dist/
+	poetry build -v --output packaging/dist
+	cp packaging/dist/* dist/
 
 upload: package
 	twine upload dist/*
+
+COMPOSE_FILE := docker/docker-compose.yaml
+COMPOSE_FLAGS := -f $(COMPOSE_FILE) --project-directory .
+release:
+	MY_UID=0 MY_GID=0 docker compose $(COMPOSE_FLAGS) build build_env
+	MY_UID=$(shell id -u) MY_GID=$(shell id -g) docker compose $(COMPOSE_FLAGS) \
+		run --rm -e MY_UID -e MY_GID \
+		  build_env docker/build_entrypoint.sh

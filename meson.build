@@ -117,8 +117,15 @@ desktop_test = executable('desktop_test',
   link_with: bouncedesk_lib,
   dependencies: test_deps)
 
-integration_test = executable('integration_test', ['src/test/integration_test_main.cpp'], include_directories: include_directories('src'), link_with: bouncedesk_lib, dependencies: [gvnc_dep])
-multi_instance_integration_test = executable('multi_instance_integration_test', ['src/test/multi_instance_integration_test_main.cpp'], include_directories: include_directories('src'), link_with: bouncedesk_lib, dependencies: [gvnc_dep])
+integration_test = executable('integration_test', 
+  ['src/test/integration_test_main.cpp'],
+  include_directories: include_directories('src'),
+  link_with: bouncedesk_lib, dependencies: [gvnc_dep])
+
+multi_instance_integration_test = executable('multi_instance_integration_test',
+  ['src/test/multi_instance_integration_test_main.cpp'],
+  include_directories: include_directories('src'),
+  link_with: bouncedesk_lib, dependencies: [gvnc_dep])
 
 test('client_test', client_test, workdir: meson.project_source_root())
 test('reaper_test', reaper_test, workdir: meson.project_source_root())
@@ -128,4 +135,4 @@ test('process_test', process_test, workdir: meson.project_source_root())
 test('launch_weston_test', launch_weston_test, workdir: meson.project_source_root())
 
 # Python extension module
-subdir('bounce_desktop')
+subdir('src/bounce_desktop')

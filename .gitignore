@@ -4,3 +4,5 @@ subprojects/
 todo.txt
 dist/
 build/
+.build_venv
+packaging/test_venv

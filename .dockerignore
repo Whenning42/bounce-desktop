@@ -1,0 +1,35 @@
+# Build artifacts
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+*.so
+*.o
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation
+*.md
+!readme.md
+
+# Test artifacts
+*.log
+
+# Python virtual environments
+venv/
+env/
+# .venv/
+
+# Misc
+prompt.txt
