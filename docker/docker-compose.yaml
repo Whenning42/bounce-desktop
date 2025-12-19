@@ -1,0 +1,17 @@
+services:
+  build_env:
+    image: bdesk_build_env
+    build:
+      dockerfile: docker/build_env.dockerfile
+
+    volumes:
+      - ./dist:/dist_out
+
+    tmpfs:
+      - /run/user/${MY_UID}:uid=${MY_UID},gid=${MY_GID},mode=0700
+      - /tmp/.X11-unix:uid=${MY_UID},gid=${MY_GID},mode=0777
+
+    environment:
+      - XDG_RUNTIME_DIR=/run/user/${MY_UID}
+
+    working_dir: /workspace

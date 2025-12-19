@@ -1,0 +1,14 @@
+# Build artifacts
+build/
+dist/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!readme.md
+
+# Virtual environments
+.venv/
