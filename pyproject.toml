@@ -1,0 +1,11 @@
+[project]
+name = "ez-desk"
+version = "0.1.0"
+description = "Add your description here"
+readme = "readme.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pysdl2>=0.9.17",
+    "python-wayland>=1.0.0",
+    "supervise-redist>=0.6.3",
+]
