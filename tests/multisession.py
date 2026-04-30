@@ -11,9 +11,16 @@ from wayland_desktop import WaylandDesktop
 from launch_portal import launch_portal
 
 
+REPO_TMP_DIR = Path(__file__).resolve().parent.parent / "tmp"
+
+
 @contextmanager
 def factorio_copies(source: Path, count: int):
-    with tempfile.TemporaryDirectory(prefix="factorio-multisession-") as tmp_dir:
+    REPO_TMP_DIR.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(
+        prefix="factorio-multisession-",
+        dir=REPO_TMP_DIR,
+    ) as tmp_dir:
         tmp_path = Path(tmp_dir)
         copies = []
         for i in range(count):
@@ -23,7 +30,7 @@ def factorio_copies(source: Path, count: int):
         yield copies
 
 
-session_count = 2
+session_count = 4
 resolution = (1000, 600)
 
 with factorio_copies(Path.home() / "Games" / "factorio", session_count) as factorios:
