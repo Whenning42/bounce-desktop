@@ -70,6 +70,10 @@ class WaylandClient:
         """Capture the current contents of the first wl_output."""
         return take_screenshot(self._registry, self._display)
 
+    def get_resolution(self) -> tuple[int, int]:
+        """Returns the client's output resolution."""
+        return self._output_w, self._output_h
+
     def mouse_press(self, button: int) -> None:
         """Press a mouse button. button: 1=left, 2=middle, 3=right."""
         self._pointer.button(self._now_ms(), X11_TO_EVDEV_BUTTON_MAP[button], 1)

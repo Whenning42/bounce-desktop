@@ -5,6 +5,10 @@ from frame import Frame
 class Desktop(Protocol):
     """A virtual desktop interface. Supports screenshots and mouse and keyboard inputs."""
 
+    def get_resolution(self) -> tuple[int, int]:
+        """Returns the desktop's resolution."""
+        ...
+
     def get_desktop_env(self) -> dict[str, str]:
         """Returns the environment variables that put processes onto this desktop."""
         ...

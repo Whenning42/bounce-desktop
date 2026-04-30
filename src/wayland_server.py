@@ -13,6 +13,7 @@ import time
 class WaylandServer:
     def __init__(self, command: str, resolution: tuple[int, int]):
         """Starts a wayland compositor running the given shell command."""
+        self.resolution = resolution
 
         with tempfile.NamedTemporaryFile(
             prefix="bounce_desk_handshake", mode="r+", encoding="utf-8"
@@ -56,6 +57,9 @@ class WaylandServer:
 
     def display_string(self) -> str:
         return self.wayland_display
+
+    def get_resolution(self) -> tuple[int, int]:
+        return self.resolution
 
     def get_desktop_env(self) -> dict[str, str]:
         return {"WAYLAND_DISPLAY": self.wayland_display}

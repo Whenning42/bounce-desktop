@@ -4,34 +4,37 @@ A Wayland + Labwc-based virtual desktop implementation.
 
 from wayland_client import WaylandClient
 from wayland_server import WaylandServer
+from frame import Frame
 
 
 class WaylandDesktop:
     def __init__(self, command, resolution):
         self.server = WaylandServer(command, resolution)
         self.client = WaylandClient(self.server.display_string(), resolution)
-        self._client_forwards = {
-            "screenshot",
-            "mouse_press",
-            "mouse_release",
-            "move_mouse",
-            "move_mouse_to",
-            "keycode_down",
-            "keycode_up",
-        }
 
-    # TODO(code): Replace the _getattr__ dynamic dispatch with
-    # actual method defintions that just forward to the client
-    # implementations.
+    def screenshot(self) -> Frame:
+        return self.client.screenshot()
 
-    def __getattr__(self, name):
-        if name in self.__dict__.get("_client_forwards", ()):
-            return getattr(self.client, name)
+    def mouse_press(self, button: int) -> None:
+        self.client.mouse_press(button)
 
-        raise AttributeError(
-            f"Attribute {name} isn't on this WaylandDesktop, nor is it forwardable "
-            "to the desktop's WaylandClient."
-        )
+    def mouse_release(self, button: int) -> None:
+        self.client.mouse_release(button)
+
+    def move_mouse(self, dx: float, dy: float) -> None:
+        self.client.move_mouse(dx, dy)
+
+    def move_mouse_to(self, x: int, y: int) -> None:
+        self.client.move_mouse_to(x, y)
+
+    def keycode_down(self, keycode: int) -> None:
+        self.client.keycode_down(keycode)
+
+    def keycode_up(self, keycode: int) -> None:
+        self.client.keycode_up(keycode)
+
+    def get_resolution(self):
+        return self.server.get_resolution()
 
     def get_desktop_env(self):
         return self.server.get_desktop_env()
