@@ -16,6 +16,7 @@ import sys
 from typing import TextIO
 
 import sdl2
+from sdl_to_evdev import SDL_TO_EVDEV
 
 SDL_BUTTON_TO_DESKTOP = {
     sdl2.SDL_BUTTON_LEFT: 1,
@@ -72,16 +73,8 @@ def write_log(log_file: TextIO | None, *parts: object) -> None:
 
 
 def evdev_keycode_from_sdl_scancode(scancode: int) -> int:
-    # SDL uses USB HID mappings which aren't generally convertible to evdevs in a nice
-    # way, so we just hardcode a few correspondances.
-    _mapping = {
-        26: 17,  # W
-        4: 30,  # A
-        22: 31,  # S
-    }
-
-    if scancode in _mapping:
-        return _mapping[scancode]
+    if scancode in SDL_TO_EVDEV:
+        return SDL_TO_EVDEV[scancode]
     return scancode
 
 
