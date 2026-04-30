@@ -6,6 +6,6 @@ readme = "readme.md"
 requires-python = ">=3.13"
 dependencies = [
     "pysdl2>=0.9.17",
-    "python-wayland>=1.0.0",
+    "pywayland==0.4.18",
     "supervise-redist>=0.6.3",
 ]

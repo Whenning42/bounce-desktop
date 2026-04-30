@@ -53,14 +53,14 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "pysdl2" },
-    { name = "python-wayland" },
+    { name = "pywayland" },
     { name = "supervise-redist" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pysdl2", specifier = ">=0.9.17" },
-    { name = "python-wayland", specifier = ">=1.0.0" },
+    { name = "pywayland", specifier = ">=0.4.18" },
     { name = "supervise-redist", specifier = ">=0.6.3" },
 ]
 
@@ -89,13 +89,13 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/c0/99/be5393cfe9c16376b4f515d90a68b11f1840143ac1890e9008bc176cf6a6/python-prctl-1.8.1.tar.gz", hash = "sha256:b4ca9a25a7d4f1ace4fffd1f3a2e64ef5208fe05f929f3edd5e27081ca7e67ce", size = 28033, upload-time = "2020-11-02T19:30:25.257Z" }
 
 [[package]]
-name = "python-wayland"
-version = "1.0.0"
+name = "pywayland"
+version = "0.4.18"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/74/77/ece1b4bf9720fd3f7f2d2ac5b514a9797246ae84bcf0761970052b173b20/python_wayland-1.0.0.tar.gz", hash = "sha256:25faf9f24bbd142894762e136c2d72cd478e746651ad0eebe9a6a6af5794ebe0", size = 637380, upload-time = "2025-06-18T22:05:29.143Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/77/22/160e4f558f0b96333d23aa9c86f5c4e3fbd11a25a7cb11899514cfa700ee/python_wayland-1.0.0-py3-none-any.whl", hash = "sha256:23b4d4b713e72d4b69eaff114f536c171c725561ac10de0ee285be19b60be541", size = 262669, upload-time = "2025-06-18T22:05:30.365Z" },
+dependencies = [
+    { name = "cffi", marker = "platform_python_implementation != 'PyPy'" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/20/93/bc9b258dcb46aafc587438355a9170c3be05a6abb5cd55bf1d600d848fa0/pywayland-0.4.18.tar.gz", hash = "sha256:598ade02783aad05a328f663b51b694c5ab68bd5d1e0926c0da3c5212c566533", size = 247348, upload-time = "2024-07-27T19:24:38.008Z" }
 
 [[package]]
 name = "sfork-redist"

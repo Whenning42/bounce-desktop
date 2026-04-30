@@ -87,34 +87,38 @@ class TestWaylandDesktop(unittest.TestCase):
 
             del desktop
 
-    # python-wayland doesn't support concurrent Wayland connections.
-    # def test_concurrent_desktops(self):
-    #     with tempfile.TemporaryDirectory(prefix="bounce-desk-unittest") as tmpdir:
-    #         log_path_0 = Path(tmpdir) / "events_0.log"
-    #         log_path_1 = Path(tmpdir) / "events_0.log"
-    #         log_path_0.touch()
-    #         log_path_1.touch()
-    #         desktop_0 = WaylandDesktop(f"python src/test_app.py --log_to={log_path_0}")
-    #         desktop_1 = WaylandDesktop(f"python src/test_app.py --log_to={log_path_1}")
-    #         time.sleep(0.3)
+    def test_concurrent_desktops(self):
+        with tempfile.TemporaryDirectory(prefix="bounce-desk-unittest") as tmpdir:
+            log_path_0 = Path(tmpdir) / "events_0.log"
+            log_path_1 = Path(tmpdir) / "events_1.log"
+            log_path_0.touch()
+            log_path_1.touch()
+            RESOLUTION = (640, 480)
+            desktop_0 = WaylandDesktop(
+                f"python src/test_app.py --log_to={log_path_0}", RESOLUTION
+            )
+            desktop_1 = WaylandDesktop(
+                f"python src/test_app.py --log_to={log_path_1}", RESOLUTION
+            )
+            time.sleep(0.3)
 
-    #         test_seq_0 = [
-    #             ("move_mouse_to", 20, 10),
-    #             ("move_mouse", 5, 2),
-    #             ("keycode_down", 17),
-    #             ("keycode_up", 17),
-    #         ]
-    #         test_seq_1 = [
-    #             ("move_mouse_to", 40, 20),
-    #             ("move_mouse", 10, 5),
-    #             ("keycode_down", 30),
-    #             ("keycode_up", 30),
-    #         ]
-    #         self.expect_sequence(desktop_0, test_seq_0, log_path_0)
-    #         self.expect_sequence(desktop_1, test_seq_1, log_path_1)
+            test_seq_0 = [
+                ("move_mouse_to", 20, 10),
+                ("move_mouse", 5, 2),
+                ("keycode_down", 17),
+                ("keycode_up", 17),
+            ]
+            test_seq_1 = [
+                ("move_mouse_to", 40, 20),
+                ("move_mouse", 10, 5),
+                ("keycode_down", 30),
+                ("keycode_up", 30),
+            ]
+            self.expect_sequence(desktop_0, test_seq_0, log_path_0)
+            self.expect_sequence(desktop_1, test_seq_1, log_path_1)
 
-    #         del desktop_0
-    #         del desktop_1
+            del desktop_0
+            del desktop_1
 
 
 if __name__ == "__main__":
