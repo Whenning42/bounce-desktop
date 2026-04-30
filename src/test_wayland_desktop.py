@@ -56,7 +56,10 @@ class TestWaylandDesktop(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="bounce-desk-unittest") as tmpdir:
             log_path = Path(tmpdir) / "events.log"
             log_path.touch()
-            desktop = WaylandDesktop(f"python src/test_app.py --log_to={log_path}")
+            RESOLUTION = (640, 480)
+            desktop = WaylandDesktop(
+                f"python src/test_app.py --log_to={log_path}", RESOLUTION
+            )
             time.sleep(0.3)
 
             test_seq = [
@@ -80,6 +83,7 @@ class TestWaylandDesktop(unittest.TestCase):
             self.assertEqual(frame.get_pixel(100, 0), (255, 0, 0, 255))
             self.assertEqual(frame.get_pixel(0, 100), (0, 255, 0, 255))
             self.assertEqual(frame.get_pixel(100, 100), (0, 0, 255, 255))
+            self.assertEqual((frame.width, frame.height), RESOLUTION)
 
             del desktop
 

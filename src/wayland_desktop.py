@@ -7,8 +7,8 @@ from wayland_server import WaylandServer
 
 
 class WaylandDesktop:
-    def __init__(self, command):
-        self.server = WaylandServer(command)
+    def __init__(self, command, resolution):
+        self.server = WaylandServer(command, resolution)
         self.client = WaylandClient(self.server.display_string())
         self._client_forwards = {
             "screenshot",
@@ -37,5 +37,9 @@ class WaylandDesktop:
         return self.server.get_desktop_env()
 
     def __del__(self):
-        del self.client
-        del self.server
+        # self.client and self.server might be unset if an exception is thrown
+        # during __init__, so we hasattr check for these objects before deleting them.
+        if hasattr(self, "client"):
+            del self.client
+        if hasattr(self, "server"):
+            del self.server
