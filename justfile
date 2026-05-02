@@ -4,6 +4,7 @@ test_wayland_desktop:
     PYTHONPATH=src python -m unittest tests.wayland_desktop_test
 
 wheel:
+    rm -rf dist/*
     uv build --wheel
 
 # Install the built wheel into a temp venv and run the tests.
