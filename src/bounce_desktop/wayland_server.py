@@ -65,7 +65,7 @@ class WaylandServer:
         return self.resolution
 
     def get_desktop_env(self) -> dict[str, str]:
-        return {"WAYLAND_DISPLAY": self.wayland_display}
+        return {"WAYLAND_DISPLAY": self.wayland_display, "DISPLAY": ""}
 
     def __del__(self):
         try:
