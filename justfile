@@ -16,4 +16,4 @@ test_wheel: wheel
 
 # Upload package to PyPI
 upload_package: test_wheel
-    uv run --only-group dev twine upload python/dist/*.whl
+    uv run --only-group dev twine upload dist/*.whl

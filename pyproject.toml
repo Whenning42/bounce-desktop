@@ -1,6 +1,6 @@
 [project]
 name = "bounce_desktop"
-version = "0.4.2"
+version = "0.4.3"
 description = "Hardware-accelerated Linux virtual desktop."
 authors = [{name="William Henning", email="wchenningwchenning@gmail.com"}]
 license = "MIT"
@@ -12,6 +12,11 @@ dependencies = [
     "pysdl2>=0.9.17",
     "pywayland==0.4.18",
     "supervise-redist>=0.6.3",
+]
+
+[dependency-groups]
+dev = [
+    "twine",
 ]
 
 [project.urls]
