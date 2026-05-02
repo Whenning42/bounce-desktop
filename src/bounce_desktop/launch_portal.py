@@ -5,7 +5,6 @@ import sys
 def launch_portal(
     wayland_display: str,
     resolution: tuple[int, int],
-    *,
     title: str,
     interactive: bool = False,
 ) -> supervise_api.Process:

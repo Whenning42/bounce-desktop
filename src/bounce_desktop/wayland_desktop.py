@@ -6,12 +6,17 @@ import numpy as np
 
 from bounce_desktop.wayland_client import WaylandClient
 from bounce_desktop.wayland_server import WaylandServer
+from bounce_desktop.launch_portal import launch_portal
 
 
 class WaylandDesktop:
-    def __init__(self, command, resolution):
+    def __init__(self, command, resolution, visible: bool = False):
         self.server = WaylandServer(command, resolution)
         self.client = WaylandClient(self.server.display_string(), resolution)
+        if visible:
+            self.portal = launch_portal(
+                self.server.display_string(), resolution, title="Bounce Desktop"
+            )
 
     def get_frame(self) -> np.ndarray:
         return self.client.screenshot().to_ndarray()
@@ -47,3 +52,5 @@ class WaylandDesktop:
             del self.client
         if "server" in self.__dict__:
             del self.server
+        if "portal" in self.__dict__:
+            self.portal.close()
