@@ -1,7 +1,0 @@
-support_tests/out
-subprojects/
-.vscode
-todo.txt
-dist/
-build/
-packaging/test_venv
