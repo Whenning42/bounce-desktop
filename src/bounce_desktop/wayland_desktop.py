@@ -2,9 +2,9 @@
 A Wayland + Labwc-based virtual desktop implementation.
 """
 
-from wayland_client import WaylandClient
-from wayland_server import WaylandServer
-from frame import Frame
+from bounce_desktop.frame import Frame
+from bounce_desktop.wayland_client import WaylandClient
+from bounce_desktop.wayland_server import WaylandServer
 
 
 class WaylandDesktop:

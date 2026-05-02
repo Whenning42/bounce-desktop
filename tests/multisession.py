@@ -7,8 +7,8 @@ import shutil
 import tempfile
 import time
 
-from wayland_desktop import WaylandDesktop
-from launch_portal import launch_portal
+from bounce_desktop import WaylandDesktop
+from bounce_desktop.launch_portal import launch_portal
 
 
 REPO_TMP_DIR = Path(__file__).resolve().parent.parent / "tmp"

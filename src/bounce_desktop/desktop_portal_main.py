@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import argparse
 
-from desktop_portal import DesktopPortal
-from wayland_client import WaylandClient
+from bounce_desktop.desktop_portal import DesktopPortal
+from bounce_desktop.wayland_client import WaylandClient
 
 
 def parse_args() -> argparse.Namespace:

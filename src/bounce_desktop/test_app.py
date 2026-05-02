@@ -16,7 +16,7 @@ import sys
 from typing import TextIO
 
 import sdl2
-from sdl_to_evdev import SDL_TO_EVDEV
+from bounce_desktop.sdl_to_evdev import SDL_TO_EVDEV
 
 SDL_BUTTON_TO_DESKTOP = {
     sdl2.SDL_BUTTON_LEFT: 1,

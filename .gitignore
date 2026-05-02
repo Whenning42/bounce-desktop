@@ -5,7 +5,7 @@ build/
 dist/
 wheels/
 *.egg-info
-src/wayland_generated_protocols/
+src/bounce_desktop/wayland_generated_protocols/
 
 # Virtual environments
 .venv

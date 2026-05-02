@@ -5,9 +5,12 @@ it via a display string.
 
 import supervise_api
 import os
+from pathlib import Path
 import shlex
 import tempfile
 import time
+
+_LABWC_ENTRY = Path(__file__).resolve().parent / "labwc_entry.sh"
 
 
 class WaylandServer:
@@ -26,7 +29,7 @@ class WaylandServer:
             startup_command = shlex.join(
                 [
                     "bash",
-                    "src/labwc_entry.sh",
+                    str(_LABWC_ENTRY),
                     tmp_file.name,
                     str(resolution[0]),
                     str(resolution[1]),

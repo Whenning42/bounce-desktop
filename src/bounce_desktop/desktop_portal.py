@@ -7,9 +7,9 @@ import time
 
 import sdl2
 
-from frame import Frame
-from sdl_to_evdev import SDL_TO_EVDEV
-from wayland_client import WaylandClient
+from bounce_desktop.frame import Frame
+from bounce_desktop.sdl_to_evdev import SDL_TO_EVDEV
+from bounce_desktop.wayland_client import WaylandClient
 
 SDL_BUTTON_TO_DESKTOP = {
     sdl2.SDL_BUTTON_LEFT: 1,

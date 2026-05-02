@@ -1,5 +1,6 @@
 from typing import Protocol
-from frame import Frame
+
+from bounce_desktop.frame import Frame
 
 
 class Desktop(Protocol):

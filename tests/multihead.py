@@ -3,8 +3,8 @@
 
 import time
 
-from wayland_desktop import WaylandDesktop
-from launch_portal import launch_portal
+from bounce_desktop import WaylandDesktop
+from bounce_desktop.launch_portal import launch_portal
 
 app = "/home/william/Games/factorio/bin/x64/factorio"
 desktop = WaylandDesktop(app, (1000, 600))

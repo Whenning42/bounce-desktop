@@ -1,9 +1,5 @@
 import supervise_api
-from pathlib import Path
 import sys
-
-_ROOT = Path(__file__).resolve().parents[1]
-_PORTAL_MAIN = _ROOT / "src" / "desktop_portal_main.py"
 
 
 def launch_portal(
@@ -15,7 +11,8 @@ def launch_portal(
 ) -> supervise_api.Process:
     command = [
         sys.executable,
-        str(_PORTAL_MAIN),
+        "-m",
+        "bounce_desktop.desktop_portal_main",
         wayland_display,
         str(resolution[0]),
         str(resolution[1]),

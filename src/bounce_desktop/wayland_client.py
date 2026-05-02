@@ -10,12 +10,16 @@ Targets wlroots-style compositors that expose:
 from __future__ import annotations
 
 import time
-from buttons import X11_TO_EVDEV_BUTTON_MAP
 
-from frame import Frame
+from bounce_desktop.buttons import X11_TO_EVDEV_BUTTON_MAP
+from bounce_desktop.frame import Frame
+from bounce_desktop.keymap import US_LAYOUT_KEYMAP, send_keymap
+from bounce_desktop.wayland_client_impl import (
+    _Registry,
+    dispatch_with_timeout,
+    take_screenshot,
+)
 from pywayland.client import Display
-from wayland_client_impl import dispatch_with_timeout, take_screenshot, _Registry
-from keymap import US_LAYOUT_KEYMAP, send_keymap
 
 _WL_KEYBOARD_KEY_STATE_RELEASED = 0
 _WL_KEYBOARD_KEY_STATE_PRESSED = 1

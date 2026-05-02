@@ -5,21 +5,22 @@ import select
 import tempfile
 from dataclasses import dataclass
 
-from frame import Frame
+from bounce_desktop.frame import Frame
+from bounce_desktop.wayland_protocols_generate import ensure_wayland_protocols
+
 from pywayland.client import Display
-from wayland_protocols_generate import ensure_wayland_protocols
 
 ensure_wayland_protocols()
 
-from wayland_generated_protocols.virtual_keyboard_unstable_v1 import (
+from bounce_desktop.wayland_generated_protocols.virtual_keyboard_unstable_v1 import (
     ZwpVirtualKeyboardManagerV1,
 )
-from wayland_generated_protocols.wayland import WlOutput, WlSeat, WlShm
-from wayland_generated_protocols.wlr_screencopy_unstable_v1 import (
+from bounce_desktop.wayland_generated_protocols.wayland import WlOutput, WlSeat, WlShm
+from bounce_desktop.wayland_generated_protocols.wlr_screencopy_unstable_v1 import (
     ZwlrScreencopyFrameV1,
     ZwlrScreencopyManagerV1,
 )
-from wayland_generated_protocols.wlr_virtual_pointer_unstable_v1 import (
+from bounce_desktop.wayland_generated_protocols.wlr_virtual_pointer_unstable_v1 import (
     ZwlrVirtualPointerManagerV1,
 )
 

@@ -5,8 +5,10 @@
 
 import unittest
 import tempfile
-from wayland_desktop import WaylandDesktop
+from bounce_desktop import WaylandDesktop
 from pathlib import Path
+import shlex
+import sys
 import time
 
 
@@ -30,6 +32,10 @@ def _make_log_lines_absolute(expected_log_lines: list[str]) -> list[str]:
     return expected_log_lines
 
 
+def _test_app_command(log_path: Path) -> str:
+    return f"{shlex.quote(sys.executable)} -m bounce_desktop.test_app --log_to={log_path}"
+
+
 class TestWaylandDesktop(unittest.TestCase):
     def expect_sequence(self, desktop: WaylandDesktop, test_seq: list, log_path: Path):
         for c in test_seq:
@@ -51,15 +57,11 @@ class TestWaylandDesktop(unittest.TestCase):
         self.assertEqual(expected_log_lines, actual_log_lines)
 
     def test_desktop(self):
-        # TODO(whenning): Split up mouse, keyboard, and screenshot tests once we
-        # get concurrent desktop support working.
         with tempfile.TemporaryDirectory(prefix="bounce-desk-unittest") as tmpdir:
             log_path = Path(tmpdir) / "events.log"
             log_path.touch()
             RESOLUTION = (640, 480)
-            desktop = WaylandDesktop(
-                f"python src/test_app.py --log_to={log_path}", RESOLUTION
-            )
+            desktop = WaylandDesktop(_test_app_command(log_path), RESOLUTION)
             time.sleep(0.3)
 
             test_seq = [
@@ -94,12 +96,8 @@ class TestWaylandDesktop(unittest.TestCase):
             log_path_0.touch()
             log_path_1.touch()
             RESOLUTION = (640, 480)
-            desktop_0 = WaylandDesktop(
-                f"python src/test_app.py --log_to={log_path_0}", RESOLUTION
-            )
-            desktop_1 = WaylandDesktop(
-                f"python src/test_app.py --log_to={log_path_1}", RESOLUTION
-            )
+            desktop_0 = WaylandDesktop(_test_app_command(log_path_0), RESOLUTION)
+            desktop_1 = WaylandDesktop(_test_app_command(log_path_1), RESOLUTION)
             time.sleep(0.3)
 
             test_seq_0 = [
