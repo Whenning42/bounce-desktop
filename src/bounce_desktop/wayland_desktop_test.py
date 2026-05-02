@@ -1,8 +1,3 @@
-# TODO(whenning):
-# - Clean up race conditions in test app startup.
-# - Identify source of flakey dropped events?
-
-
 import unittest
 import tempfile
 from bounce_desktop import WaylandDesktop
@@ -45,7 +40,12 @@ class TestWaylandDesktop(unittest.TestCase):
     def wait_for_test_app(self, desktop: WaylandDesktop) -> None:
         start = time.time()
         while time.time() - start < 3:
-            frame = desktop.get_frame()
+            try:
+                frame = desktop.get_frame()
+            except RuntimeError:
+                time.sleep(0.01)
+                continue
+
             if (
                 tuple(frame[0, 0]) == (0, 0, 0, 255)
                 and tuple(frame[0, 100]) == (255, 0, 0, 255)
