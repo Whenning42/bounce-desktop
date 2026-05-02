@@ -1,0 +1,5 @@
+X11_TO_EVDEV_BUTTON_MAP = {
+    1: 0x110,  # BTN_LEFT
+    2: 0x112,  # BTN_MIDDLE
+    3: 0x111,  # BTN_RIGHT
+}
