@@ -1,6 +1,6 @@
 [project]
 name = "bounce_desktop"
-version = "0.4.4"
+version = "0.4.5"
 description = "Hardware-accelerated Linux virtual desktop."
 authors = [{name="William Henning", email="wchenningwchenning@gmail.com"}]
 license = "MIT"

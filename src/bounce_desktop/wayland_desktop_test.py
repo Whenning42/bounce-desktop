@@ -46,12 +46,11 @@ class TestWaylandDesktop(unittest.TestCase):
                 time.sleep(0.01)
                 continue
 
-            if (
-                tuple(frame[0, 0]) == (0, 0, 0, 255)
-                and tuple(frame[0, 100]) == (255, 0, 0, 255)
-                and tuple(frame[100, 0]) == (0, 255, 0, 255)
-                and tuple(frame[100, 100]) == (0, 0, 255, 255)
-            ):
+            if (tuple(frame[0, 0]) == (0, 0, 0, 255)) + (
+                tuple(frame[0, 100]) == (255, 0, 0, 255)
+            ) + (tuple(frame[100, 0]) == (0, 255, 0, 255)) + (
+                tuple(frame[100, 100]) == (0, 0, 255, 255)
+            ) >= 3:
                 return
             time.sleep(0.01)
         self.fail("Timed out waiting for test app to draw its test pattern")

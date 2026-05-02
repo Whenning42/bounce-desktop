@@ -149,7 +149,7 @@ class _ScreencopyState:
 
 def take_screenshot(registry: _Registry, display: Display) -> Frame:
     scpy_frame = registry.zwlr_screencopy_manager_v1.capture_output(
-        0, registry.wl_output
+        1, registry.wl_output
     )
     state = _ScreencopyState()
     state.attach(scpy_frame)
