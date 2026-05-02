@@ -1,4 +1,4 @@
-# Verify that Desktop.screenshot() is thread safe by connecting multiple
+# Verify that Desktop.get_frame() is thread safe by connecting multiple
 # DesktopPortals to a single desktop.
 
 import time

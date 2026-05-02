@@ -6,6 +6,7 @@
 import unittest
 import tempfile
 from bounce_desktop import WaylandDesktop
+import numpy as np
 from pathlib import Path
 import shlex
 import sys
@@ -33,10 +34,28 @@ def _make_log_lines_absolute(expected_log_lines: list[str]) -> list[str]:
 
 
 def _test_app_command(log_path: Path) -> str:
-    return f"{shlex.quote(sys.executable)} -m bounce_desktop.test_app --log_to={log_path}"
+    return (
+        f"{shlex.quote(sys.executable)} -m bounce_desktop.test_app --log_to={log_path}"
+    )
 
 
 class TestWaylandDesktop(unittest.TestCase):
+    # Prevent race conditions on test_app startup, by polling
+    # for test app to appear reday before continuing with our tests.
+    def wait_for_test_app(self, desktop: WaylandDesktop) -> None:
+        start = time.time()
+        while time.time() - start < 3:
+            frame = desktop.get_frame()
+            if (
+                tuple(frame[0, 0]) == (0, 0, 0, 255)
+                and tuple(frame[0, 100]) == (255, 0, 0, 255)
+                and tuple(frame[100, 0]) == (0, 255, 0, 255)
+                and tuple(frame[100, 100]) == (0, 0, 255, 255)
+            ):
+                return
+            time.sleep(0.01)
+        self.fail("Timed out waiting for test app to draw its test pattern")
+
     def expect_sequence(self, desktop: WaylandDesktop, test_seq: list, log_path: Path):
         for c in test_seq:
             fn_name, *args = c
@@ -62,7 +81,7 @@ class TestWaylandDesktop(unittest.TestCase):
             log_path.touch()
             RESOLUTION = (640, 480)
             desktop = WaylandDesktop(_test_app_command(log_path), RESOLUTION)
-            time.sleep(0.3)
+            self.wait_for_test_app(desktop)
 
             test_seq = [
                 ("move_mouse_to", 20, 10),
@@ -80,12 +99,13 @@ class TestWaylandDesktop(unittest.TestCase):
             ]
             self.expect_sequence(desktop, test_seq, log_path)
 
-            frame = desktop.screenshot()
-            self.assertEqual(frame.get_pixel(0, 0), (0, 0, 0, 255))
-            self.assertEqual(frame.get_pixel(100, 0), (255, 0, 0, 255))
-            self.assertEqual(frame.get_pixel(0, 100), (0, 255, 0, 255))
-            self.assertEqual(frame.get_pixel(100, 100), (0, 0, 255, 255))
-            self.assertEqual((frame.width, frame.height), RESOLUTION)
+            frame = desktop.get_frame()
+            self.assertEqual(frame.dtype, np.uint8)
+            self.assertEqual(frame.shape, (RESOLUTION[1], RESOLUTION[0], 4))
+            np.testing.assert_array_equal(frame[0, 0], (0, 0, 0, 255))
+            np.testing.assert_array_equal(frame[0, 100], (255, 0, 0, 255))
+            np.testing.assert_array_equal(frame[100, 0], (0, 255, 0, 255))
+            np.testing.assert_array_equal(frame[100, 100], (0, 0, 255, 255))
 
             del desktop
 
@@ -98,7 +118,8 @@ class TestWaylandDesktop(unittest.TestCase):
             RESOLUTION = (640, 480)
             desktop_0 = WaylandDesktop(_test_app_command(log_path_0), RESOLUTION)
             desktop_1 = WaylandDesktop(_test_app_command(log_path_1), RESOLUTION)
-            time.sleep(0.3)
+            self.wait_for_test_app(desktop_0)
+            self.wait_for_test_app(desktop_1)
 
             test_seq_0 = [
                 ("move_mouse_to", 20, 10),

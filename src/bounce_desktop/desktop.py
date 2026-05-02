@@ -1,10 +1,10 @@
 from typing import Protocol
 
-from bounce_desktop.frame import Frame
+import numpy as np
 
 
 class Desktop(Protocol):
-    """A virtual desktop interface. Supports screenshots and mouse and keyboard inputs."""
+    """A virtual desktop interface. Supports frame capture and mouse and keyboard inputs."""
 
     def get_resolution(self) -> tuple[int, int]:
         """Returns the desktop's resolution."""
@@ -14,8 +14,8 @@ class Desktop(Protocol):
         """Returns the environment variables that put processes onto this desktop."""
         ...
 
-    def screenshot(self) -> Frame:
-        """Take a screenshot of the desktop."""
+    def get_frame(self) -> np.ndarray:
+        """Return an RGBA8888 frame as a uint8 array shaped (height, width, 4)."""
         ...
 
     def mouse_press(self, button: int) -> None:

@@ -2,7 +2,8 @@
 A Wayland + Labwc-based virtual desktop implementation.
 """
 
-from bounce_desktop.frame import Frame
+import numpy as np
+
 from bounce_desktop.wayland_client import WaylandClient
 from bounce_desktop.wayland_server import WaylandServer
 
@@ -12,8 +13,8 @@ class WaylandDesktop:
         self.server = WaylandServer(command, resolution)
         self.client = WaylandClient(self.server.display_string(), resolution)
 
-    def screenshot(self) -> Frame:
-        return self.client.screenshot()
+    def get_frame(self) -> np.ndarray:
+        return self.client.screenshot().to_ndarray()
 
     def mouse_press(self, button: int) -> None:
         self.client.mouse_press(button)
